@@ -63,7 +63,8 @@ static void MX_GPIO_Init(void);
 static void MX_USART3_UART_Init(void);
 static void MX_USB_OTG_FS_PCD_Init(void);
 void StartDefaultTask(void *argument);
-
+void vTask1( void *pvParameters );
+void vTask2( void *pvParameters );
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -132,6 +133,10 @@ int main(void)
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
+  xTaskCreate(vTask1, (signed char *) "Task1", configMINIMAL_STACK_SIZE, NULL, 1, NULL);
+  xTaskCreate(vTask2, ( signed char * ) "Task2", configMINIMAL_STACK_SIZE, NULL, 1, NULL );
+  /* Запустить планировщик. Задачи начнут выполняться. */
+  vTaskStartScheduler();
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_EVENTS */
@@ -367,7 +372,34 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+void vTask1( void *pvParameters )
+{
+	/* Квалификатор volatile запрещает оптимизацию
+	/* переменной ul */
+	volatile unsigned long ul;
+	/* Как и большинство задач, эта задача содержит
+	/* бесконечный цикл */
+	for( ;; ){
 
+		HAL_GPIO_TogglePin(LD1_GPIO_Port, LD1_Pin);
+		osDelay(1000);
+	}
+	/* Уничтожить задачу, если произошел выход
+	/* из бесконечного цикла (в данной реализации выход
+	/* заведомо не произойдет) */
+	vTaskDelete( NULL );
+}
+
+void vTask2( void *pvParameters )
+{
+	volatile unsigned long ul;
+	for( ;; ){
+		HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+		osDelay(1000);
+
+	}
+	vTaskDelete( NULL );
+}
 /* USER CODE END 4 */
 
 /* USER CODE BEGIN Header_StartDefaultTask */
