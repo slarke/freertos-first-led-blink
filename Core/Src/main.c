@@ -136,7 +136,7 @@ int main(void)
   xTaskCreate(vTask1, (signed char *) "Task1", configMINIMAL_STACK_SIZE, NULL, 1, NULL);
   xTaskCreate(vTask2, ( signed char * ) "Task2", configMINIMAL_STACK_SIZE, NULL, 1, NULL );
   /* Запустить планировщик. Задачи начнут выполняться. */
-  vTaskStartScheduler();
+//  vTaskStartScheduler();
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_EVENTS */
